@@ -9,4 +9,6 @@ public interface SearchEngine {
 
     int search(String query);
     MyResponse searchQuery(String query) throws IOException;
+
+    String getElasticVersion() throws IOException;
 }

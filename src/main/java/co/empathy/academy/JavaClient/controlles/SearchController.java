@@ -22,5 +22,16 @@ public class SearchController {
         service= new SearchService(new SearchEngineImpl());
         return service.search(query);
     }
+    @GetMapping("/search")
+    public String search(@RequestParam String query) {
+
+        String version = elasticService.performGETRequest("/");
+
+        JSONObject json = new JSONObject(version);
+
+        JSONObject theVersion = (JSONObject)json.get("version");
+
+        return "{\"query\": " + query + ", \"clusterName\" : " + theVersion.get("number") + "}";
+    }
 
 }

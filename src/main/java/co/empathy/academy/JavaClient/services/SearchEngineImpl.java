@@ -2,9 +2,12 @@ package co.empathy.academy.JavaClient.services;
 
 
 
+import co.elastic.clients.transport.Transport;
 import co.empathy.academy.JavaClient.model.MyResponse;
 
-import org.elasticsearch.client.ElasticsearchClient;
+import net.minidev.json.JSONObject;
+import org.apache.http.util.EntityUtils;
+import org.elasticsearch.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -15,6 +18,7 @@ public class SearchEngineImpl implements SearchEngine {
     // For our example we'll just return the query length as number of results
     @Autowired
     public ElasticsearchClient elasticsearchClient;
+    private RestClient elasticClient;
 
     @Override
     public int search(String query) {
@@ -29,7 +33,27 @@ public class SearchEngineImpl implements SearchEngine {
         String numberVersion = elasticsearchClient.getElasticVersion();
         return new MyResponse(query, numberVersion);
     }
-}
+
+    @Override
+    public String getElasticVersion() throws IOException {
+        String version;
+        try
+        {
+            Request request = new Request("GET", "/");
+            Response response = elasticClient.performRequest(request);
+            String responseStr = EntityUtils.toString(response.getEntity());
+            JSONObject responseObj = new JSONObject(responseStr);
+            version=responseObj.getString("version");
+
+        } catch (IOException exception)
+        {
+            throw new RuntimeException("IOException in getVersion() ");
+        }
+
+        return version;
+    }
+
+}  
 
 
 
