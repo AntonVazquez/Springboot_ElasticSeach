@@ -112,10 +112,9 @@ public class SearchEngine {
         conditionMap.put("titleTipe.keyword", movie.getTitleType());
         conditionMap.put("primaryTitle.keyword", movie.getPrimaryTitle());
         conditionMap.put("originalTitle.keyword", movie.getOrigilTtle());
-        conditionMap.put("isAdult.keyword", movie.getIsAdult());
         conditionMap.put("startYear.keyword", movie.getStartYear());
         conditionMap.put("endYear.keyword", movie.getEndYear());
-        conditionMap.put("runtimeMinutes.int", movie.getRunTimeMinutes());
+        conditionMap.put("runtimeMinutes.Keyword", String.valueOf(movie.getRunTimeMinutes()));
         conditionMap.put("genres.keyword", movie.getGeneres());
 
         return conditionMap.entrySet().stream()

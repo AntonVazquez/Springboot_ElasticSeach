@@ -32,27 +32,12 @@ public class ElasticSearchConfig {
         // hlrc and esClient share the same httpClient
 
     }
-
-    @Bean
-    public RestClient lowRestClient() {
-
-        RestClient restClient = RestClient.builder(
-                new HttpHost("localhost", 9200, "http")).build();
-
-        return restClient;
-    }
-
-
-    @Bean
-    public RestClient getRestClient() {
-        return RestClient.builder(new HttpHost("localhost", 9200)).build();
-    }
-
-    @Bean
-    public SearchEngine searchEngine() {
-        return new SearchEngineImpl();
-    }
-
-
-
 }
+
+
+
+
+
+
+
+

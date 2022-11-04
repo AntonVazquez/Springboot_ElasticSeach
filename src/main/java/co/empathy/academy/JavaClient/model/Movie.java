@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Movie {
 
-        private Long id;
+        private String id;
         private String tconst;
         private String titleType;
         private String primaryTitle;
