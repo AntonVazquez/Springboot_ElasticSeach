@@ -1,9 +1,11 @@
 package co.empathy.academy.JavaClient.services;
 
-import co.empathy.academy.JavaClient.model.MyResponse;
+import co.empathy.academy.JavaClient.exception.RecordNotFoundException;
+import co.empathy.academy.JavaClient.model.Movie;
 
 
 import java.io.IOException;
+import java.util.List;
 
 public class SearchServiceImpl implements SearchService {
 
@@ -14,19 +16,42 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public int search(String query) {
-        return searchEngine.search(query);
+    public Movie fetchMovieById(String id) throws RecordNotFoundException, IOException {
+        return SearchEngine.fetchMovieById(id);
+    }
+
+
+
+    @Override
+    public String insertMovie(Movie employee) throws IOException {
+        return SearchEngine.insertMovie(employee);
     }
 
     @Override
-    public MyResponse searchQuery(String query) throws IOException {
-        return searchEngine.searchQuery(query);
+    public boolean bulkInsertMovies(List<Movie> movies) throws IOException {
+        return SearchEngine.bulkInsertMovies(movies);
     }
 
     @Override
-    public String getElasticVersion() throws IOException {
-        return searchEngine.getElasticVersion();
+    public List<Movie> fetchMoviesWithMustQuery(Movie movie) throws IOException {
+        return SearchEngine.fetchMoviesWithMustQuery(movie);
     }
 
+    @Override
+    public List<Movie> fetchMoviesWithShouldQuery(Movie movie) throws IOException {
+        return SearchEngine.fetchEMoviesWithShouldQuery(movie);
+    }
 
+    @Override
+    public String deleteMovieById(Long id) throws IOException {
+        return SearchEngine.deleteMovieById(id);
+    }
+
+    @Override
+    public String updateMovie(Movie movie) throws IOException {
+        return SearchEngine.updateMovie(movie);
+    }
 }
+
+
+

@@ -5,8 +5,6 @@ import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import co.empathy.academy.JavaClient.services.SearchEngine;
-import co.empathy.academy.JavaClient.services.SearchEngineImpl;
-import co.empathy.academy.JavaClient.services.SearchService;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
