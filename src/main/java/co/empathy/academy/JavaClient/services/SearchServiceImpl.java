@@ -1,11 +1,18 @@
 package co.empathy.academy.JavaClient.services;
 
+import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.BulkResponse;
+import co.empathy.academy.JavaClient.exception.BulkIndexException;
 import co.empathy.academy.JavaClient.exception.RecordNotFoundException;
 import co.empathy.academy.JavaClient.model.Movie;
+import co.empathy.academy.JavaClient.utils.IMDbReader;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
 import java.util.List;
+
+import static co.empathy.academy.JavaClient.services.SearchEngine.elasticsearchClient;
 
 public class SearchServiceImpl implements SearchService {
 
@@ -50,6 +57,16 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public String updateMovie(Movie movie) throws IOException {
         return SearchEngine.updateMovie(movie);
+    }
+    @Override
+    public void indexBulk(List<Movie> movies) throws IOException {
+        return SearchEngine.indexbulk;
+
+
+
+    @Override
+    public void indexImdbData
+        }
     }
 }
 

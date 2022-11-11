@@ -20,7 +20,7 @@ public class IMDbReader {
     private boolean hasDocuments = true;
 
 
-    public IMDbReader(MultipartFile basicsFile, MultipartFile ratingsFile, MultipartFile akasFile, MultipartFile crewFile) {
+    public IMDbReader(MultipartFile basicsFile, MultipartFile ratingsFile) {
         try {
             this.basicsReader = new BufferedReader(new InputStreamReader(basicsFile.getInputStream()));
             this.ratingsReader = new BufferedReader(new InputStreamReader(ratingsFile.getInputStream()));
