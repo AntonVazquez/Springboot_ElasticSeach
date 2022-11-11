@@ -63,4 +63,6 @@ public class SearchController {
             String status = searchService.updateMovie(movie);
             return ResponseEntity.ok(status);
         }
+
+
     }

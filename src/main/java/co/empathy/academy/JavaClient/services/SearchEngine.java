@@ -6,13 +6,16 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 
+import co.empathy.academy.JavaClient.exception.BulkIndexException;
 import co.empathy.academy.JavaClient.exception.RecordNotFoundException;
 import co.empathy.academy.JavaClient.model.Movie;
+import co.empathy.academy.JavaClient.utils.IMDbReader;
 import co.empathy.academy.JavaClient.utils.QueryBuilderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -27,7 +30,7 @@ public class SearchEngine {
     private static String index;
 
     @Autowired
-    private static ElasticsearchClient elasticsearchClient;
+    public static ElasticsearchClient elasticsearchClient;
 
     public static String insertMovie(Movie movie) throws IOException {
         IndexRequest<Movie> request = IndexRequest.of(i->
@@ -122,6 +125,38 @@ public class SearchEngine {
                 .map(entry-> QueryBuilderUtils.termQuery(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
     }
+
+
+    public void indexBulk(List<Movie> movies) throws IOException, BulkIndexException {
+        BulkRequest.Builder request = new BulkRequest.Builder();
+
+        movies.forEach(movie -> request.operations(op -> op
+                .index(i -> i
+                        .index("imdb")
+                        .id(movie.getTconst())
+                        .document(movie))));
+
+        BulkResponse bulkResponse = elasticsearchClient.bulk(request.build());
+        if (bulkResponse.errors()) {
+            throw new BulkIndexException("Error indexing bulk");
+        }
+    }
+
+
+
+
+    public void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile) throws IOException, BulkIndexException {
+        IMDbReader reader = new IMDbReader(basicsFile, ratingsFile);
+
+        while (reader.hasDocuments()) {
+            List<Movie> movies = reader.readDocuments();
+            indexBulk(movies);
+        }
+    }
+
+
+
+
 
 
 
