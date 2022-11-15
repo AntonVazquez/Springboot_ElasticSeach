@@ -1,17 +1,19 @@
 package co.empathy.academy.JavaClient.model;
 
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-
-
+@Value
+@NoArgsConstructor(force = true)
+@AllArgsConstructor
 public class Aka {
+
     String title;
     String region;
     String language;
     Boolean isOriginalTitle;
-
 }
+
+
