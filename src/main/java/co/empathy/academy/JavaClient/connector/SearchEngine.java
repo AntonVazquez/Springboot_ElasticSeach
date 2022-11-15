@@ -1,4 +1,4 @@
-package co.empathy.academy.JavaClient.services;
+package co.empathy.academy.JavaClient.connector;
 
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
@@ -31,6 +31,7 @@ public class SearchEngine {
 
     @Autowired
     public static ElasticsearchClient elasticsearchClient;
+
 
     public static String insertMovie(Movie movie) throws IOException {
         IndexRequest<Movie> request = IndexRequest.of(i->
@@ -126,8 +127,8 @@ public class SearchEngine {
                 .collect(Collectors.toList());
     }
 
-
-    public void indexBulk(List<Movie> movies) throws IOException, BulkIndexException {
+    /**
+    public static void indexBulk(List<Movie> movies) throws IOException, BulkIndexException {
         BulkRequest.Builder request = new BulkRequest.Builder();
 
         movies.forEach(movie -> request.operations(op -> op
@@ -141,21 +142,24 @@ public class SearchEngine {
             throw new BulkIndexException("Error indexing bulk");
         }
     }
+    */
 
 
 
+    public static void indexbulkMovies(List<Movie> movies) throws IOException, BulkIndexException {
+        BulkRequest.Builder request = new BulkRequest.Builder();
 
-    public void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile) throws IOException, BulkIndexException {
-        IMDbReader reader = new IMDbReader(basicsFile, ratingsFile);
+        movies.forEach(movie -> request.operations(op -> op
+                .index(i -> i
+                        .index("imdb")
+                        .id(movie.getTconst())
+                        .document(movie))));
 
-        while (reader.hasDocuments()) {
-            List<Movie> movies = reader.readDocuments();
-            indexBulk(movies);
+        BulkResponse bulkResponse = elasticsearchClient.bulk(request.build());
+        if (bulkResponse.errors()) {
+            throw new BulkIndexException("Error indexing bulk");
         }
     }
-
-
-
 
 
 
