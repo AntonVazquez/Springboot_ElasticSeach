@@ -26,7 +26,7 @@ public interface SearchService {
 
         public String updateMovie(Movie movie) throws IOException;
 
-        void indexBulk(List<Movie> movies) throws IOException, BulkIndexException;
 
-        void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile) throws IOException, BulkIndexException;
+        void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile,
+                           MultipartFile akasFile, MultipartFile crewFile) throws IOException, BulkIndexException;
 }
