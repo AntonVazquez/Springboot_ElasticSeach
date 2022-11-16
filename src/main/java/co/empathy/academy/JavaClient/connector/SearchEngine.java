@@ -36,7 +36,7 @@ public class SearchEngine {
     public static String insertMovie(Movie movie) throws IOException {
         IndexRequest<Movie> request = IndexRequest.of(i->
                 i.index(index)
-                        .id(String.valueOf(movie.getId()))
+                        .id(String.valueOf(movie.getTconst()))
                         .document(movie));
         IndexResponse response = elasticsearchClient.index(request);
         return response.result().toString();
@@ -48,7 +48,7 @@ public class SearchEngine {
                 builder.operations(op->
                         op.index(i->
                                 i.index(index)
-                                        .id(String.valueOf(movie.getId()))
+                                        .id(String.valueOf(movie.getTconst()))
                                         .document(movie)))
         );
         BulkResponse bulkResponse = elasticsearchClient.bulk(builder.build());
@@ -65,33 +65,6 @@ public class SearchEngine {
         return response.source();
     }
 
-    public static List<Movie> fetchMoviesWithMustQuery(Movie movie) throws IOException {
-        List<Query> queries = prepareQueryList(movie);
-        SearchResponse<Movie> employeeSearchResponse = elasticsearchClient.search(req->
-                        req.index(index)
-                                .size(movie.getSize())
-                                .query(query->
-                                        query.bool(bool->
-                                                bool.must(queries))),
-                Movie.class);
-
-        return employeeSearchResponse.hits().hits().stream()
-                .map(Hit::source).collect(Collectors.toList());
-    }
-
-    public static List<Movie> fetchEMoviesWithShouldQuery(Movie movie) throws IOException {
-        List<Query> queries = prepareQueryList(movie);
-        SearchResponse<Movie> employeeSearchResponse = elasticsearchClient.search(req->
-                        req.index(index)
-                                .size(movie.getSize())
-                                .query(query->
-                                        query.bool(bool->
-                                                bool.should(queries))),
-                Movie.class);
-
-        return employeeSearchResponse.hits().hits().stream()
-                .map(Hit::source).collect(Collectors.toList());
-    }
 
     public static String deleteMovieById(Long id) throws IOException {
         DeleteRequest request = DeleteRequest.of(req->
@@ -103,46 +76,21 @@ public class SearchEngine {
     public static String updateMovie(Movie movie) throws IOException {
         UpdateRequest<Movie, Movie> updateRequest = UpdateRequest.of(req->
                 req.index(index)
-                        .id(String.valueOf(movie.getId()))
+                        .id(String.valueOf(movie.getTconst()))
                         .doc(movie));
         UpdateResponse<Movie> response = elasticsearchClient.update(updateRequest, Movie.class);
         return response.result().toString();
     }
 
 
-    private static List<Query> prepareQueryList(Movie movie) {
-        Map<String, String> conditionMap = new HashMap<>();
-        conditionMap.put("tcost.keyword", movie.getTconst());
-        conditionMap.put("titleTipe.keyword", movie.getTitleType());
-        conditionMap.put("primaryTitle.keyword", movie.getPrimaryTitle());
-        conditionMap.put("originalTitle.keyword", movie.getOrigilTtle());
-        conditionMap.put("startYear.keyword", movie.getStartYear());
-        conditionMap.put("endYear.keyword", movie.getEndYear());
-        conditionMap.put("runtimeMinutes.Keyword", String.valueOf(movie.getRunTimeMinutes()));
-        conditionMap.put("genres.keyword", movie.getGeneres());
-
-        return conditionMap.entrySet().stream()
-                .filter(entry->!ObjectUtils.isEmpty(entry.getValue()))
-                .map(entry-> QueryBuilderUtils.termQuery(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
-    }
-
-    /**
-    public static void indexBulk(List<Movie> movies) throws IOException, BulkIndexException {
-        BulkRequest.Builder request = new BulkRequest.Builder();
-
-        movies.forEach(movie -> request.operations(op -> op
-                .index(i -> i
-                        .index("imdb")
-                        .id(movie.getTconst())
-                        .document(movie))));
-
-        BulkResponse bulkResponse = elasticsearchClient.bulk(request.build());
-        if (bulkResponse.errors()) {
-            throw new BulkIndexException("Error indexing bulk");
+    public void createIndex() throws IOException {
+        try {
+            elasticsearchClient.indices().delete(d -> d.index("imdb"));
+        } catch (Exception e) {
+            // Ignore
         }
+        elasticsearchClient.indices().create(c -> c.index("imdb"));
     }
-    */
 
 
 
@@ -162,6 +110,10 @@ public class SearchEngine {
     }
 
 
-
-
+    public void indexDocument(Movie movie) throws IOException {
+        elasticsearchClient.index(i -> i
+                .index("imdb")
+                .id(movie.getTconst())
+                .document(movie));
+    }
 }
