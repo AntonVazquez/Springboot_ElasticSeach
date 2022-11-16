@@ -24,8 +24,6 @@ public class SearchServiceImpl implements SearchService {
         return SearchEngine.fetchMovieById(id);
     }
 
-
-
     @Override
     public String insertMovie(Movie employee) throws IOException {
         return SearchEngine.insertMovie(employee);
@@ -36,15 +34,7 @@ public class SearchServiceImpl implements SearchService {
         return SearchEngine.bulkInsertMovies(movies);
     }
 
-    @Override
-    public List<Movie> fetchMoviesWithMustQuery(Movie movie) throws IOException {
-        return SearchEngine.fetchMoviesWithMustQuery(movie);
-    }
 
-    @Override
-    public List<Movie> fetchMoviesWithShouldQuery(Movie movie) throws IOException {
-        return SearchEngine.fetchEMoviesWithShouldQuery(movie);
-    }
 
     @Override
     public String deleteMovieById(Long id) throws IOException {
@@ -54,6 +44,15 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public String updateMovie(Movie movie) throws IOException {
         return SearchEngine.updateMovie(movie);
+    }
+
+    @Override
+    public void createIndex() throws IOException {
+        searchEngine.createIndex();
+        /*
+        searchEngine.putSettings();
+        searchEngine.putMapping();
+        */
     }
 
     @Override
@@ -67,8 +66,10 @@ public class SearchServiceImpl implements SearchService {
         }
     }
 
-
-
+    @Override
+    public void indexDocument(Movie movie) throws IOException {
+        searchEngine.indexDocument(movie);
+    }
 
 
 }

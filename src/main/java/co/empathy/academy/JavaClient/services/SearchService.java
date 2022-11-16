@@ -12,6 +12,8 @@ import java.util.List;
 public interface SearchService {
 
 
+
+
         Movie fetchMovieById(String id) throws RecordNotFoundException, IOException;
 
 
@@ -19,14 +21,16 @@ public interface SearchService {
 
         boolean bulkInsertMovies(List<Movie> movies) throws IOException;
 
-        public List<Movie> fetchMoviesWithMustQuery(Movie movie) throws IOException;
-        public List<Movie> fetchMoviesWithShouldQuery(Movie movie) throws IOException;
 
         public String deleteMovieById(Long id) throws IOException;
 
         public String updateMovie(Movie movie) throws IOException;
 
 
+       void createIndex() throws IOException;
+
         void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile,
                            MultipartFile akasFile, MultipartFile crewFile) throws IOException, BulkIndexException;
+
+        void indexDocument(Movie movie) throws IOException;
 }

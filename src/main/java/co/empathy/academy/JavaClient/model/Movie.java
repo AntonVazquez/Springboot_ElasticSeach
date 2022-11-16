@@ -1,26 +1,29 @@
 package co.empathy.academy.JavaClient.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
+import java.util.List;
+
+@Value
+@NoArgsConstructor(force = true)
+@AllArgsConstructor
 public class Movie {
 
-        private String id;
-        private String tconst;
-        private String titleType;
-        private String primaryTitle;
-        private String origilTtle;
-        private boolean isAdult;
-        private String startYear;
-        private String endYear;
-        private int runTimeMinutes;
-        private String generes;
-        private Integer size;
-
+        String tconst;
+        String titleType;
+        String primaryTitle;
+        String originalTitle;
+        Boolean isAdult;
+        int startYear;
+        int endYear;
+        int runtimeMinutes;
+        String[] genres;
+        double averageRating;
+        int numVotes;
+        List<Aka> akas;
+        List<Director> directors;
 
 
 }
