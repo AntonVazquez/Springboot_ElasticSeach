@@ -1,12 +1,14 @@
 package co.empathy.academy.JavaClient.controlles;
 
 
+import co.empathy.academy.JavaClient.exception.BulkIndexException;
 import co.empathy.academy.JavaClient.exception.RecordNotFoundException;
 import co.empathy.academy.JavaClient.model.Movie;
 import co.empathy.academy.JavaClient.services.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,17 +26,7 @@ public class SearchController {
             return ResponseEntity.ok(movie);
         }
 
-        @PostMapping("/index/fetchWithMust")
-        public ResponseEntity<List<Movie>> fetchMoviesWithMustQuery(@RequestBody Movie movieSearchRequest) throws IOException {
-            List<Movie> movies = searchService.fetchMoviesWithMustQuery(movieSearchRequest);
-            return ResponseEntity.ok(movies);
-        }
 
-        @PostMapping("/index/fetchWithShould")
-        public ResponseEntity<List<Movie>> fetchMoviesWithShouldQuery(@RequestBody Movie movieSearchRequest) throws IOException {
-            List<Movie> movies = searchService.fetchMoviesWithShouldQuery(movieSearchRequest);
-            return ResponseEntity.ok(movies);
-        }
 
         @PostMapping("/index")
         public ResponseEntity<String> insertRecords(@RequestBody Movie movie) throws IOException {
@@ -63,6 +55,20 @@ public class SearchController {
             String status = searchService.updateMovie(movie);
             return ResponseEntity.ok(status);
         }
+
+    public ResponseEntity indexImdbData(@RequestParam("basicsFile") MultipartFile basicsFile,
+                                        @RequestParam("ratingsFile") MultipartFile ratingsFile,
+                                        @RequestParam("akasFile") MultipartFile akasFile,
+                                        @RequestParam("crewFile") MultipartFile crewFile) {
+        try {
+            searchService.indexImdbData(basicsFile, ratingsFile, akasFile, crewFile);
+        } catch (BulkIndexException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.accepted().build();
+    }
 
 
     }
