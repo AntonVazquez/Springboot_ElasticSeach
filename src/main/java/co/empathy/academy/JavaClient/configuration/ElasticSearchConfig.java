@@ -39,7 +39,12 @@ public class ElasticSearchConfig {
     public SearchService getSearchService(SearchEngine searchEngine) {
         return new SearchServiceImpl(searchEngine);
     }
+    @Bean
+    public SearchEngine getElasticEngine(ElasticsearchClient elasticsearchClient) {
+        return new SearchEngine(elasticsearchClient);
+    }
 }
+
 
 
 

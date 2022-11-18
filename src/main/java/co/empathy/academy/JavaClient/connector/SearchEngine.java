@@ -32,6 +32,10 @@ public class SearchEngine {
     @Autowired
     public static ElasticsearchClient elasticsearchClient;
 
+    public SearchEngine(ElasticsearchClient elasticsearchClient) {
+            this.elasticsearchClient = elasticsearchClient;
+    }
+
 
     public static String insertMovie(Movie movie) throws IOException {
         IndexRequest<Movie> request = IndexRequest.of(i->
