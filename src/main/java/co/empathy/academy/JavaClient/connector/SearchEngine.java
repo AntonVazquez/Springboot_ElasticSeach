@@ -18,6 +18,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,65 +28,15 @@ import java.util.stream.Collectors;
 @Service
 public class SearchEngine {
 
-    @Value("${elastic.index}")
-    private static String index;
 
-    @Autowired
-    public static ElasticsearchClient elasticsearchClient;
+
+    private final ElasticsearchClient elasticsearchClient;
 
     public SearchEngine(ElasticsearchClient elasticsearchClient) {
-            this.elasticsearchClient = elasticsearchClient;
+        this.elasticsearchClient = elasticsearchClient;
     }
 
 
-    public static String insertMovie(Movie movie) throws IOException {
-        IndexRequest<Movie> request = IndexRequest.of(i->
-                i.index(index)
-                        .id(String.valueOf(movie.getTconst()))
-                        .document(movie));
-        IndexResponse response = elasticsearchClient.index(request);
-        return response.result().toString();
-    }
-
-    public static boolean bulkInsertMovies(List<Movie> movieList) throws IOException {
-        BulkRequest.Builder builder = new BulkRequest.Builder();
-        movieList.stream().forEach(movie ->
-                builder.operations(op->
-                        op.index(i->
-                                i.index(index)
-                                        .id(String.valueOf(movie.getTconst()))
-                                        .document(movie)))
-        );
-        BulkResponse bulkResponse = elasticsearchClient.bulk(builder.build());
-        return !bulkResponse.errors();
-    }
-
-    public static Movie fetchMovieById(String id) throws RecordNotFoundException, IOException {
-        GetResponse<Movie> response = elasticsearchClient.get(req->
-                req.index(index)
-                        .id(id),Movie.class);
-        if(!response.found())
-            throw new RecordNotFoundException("Movie with ID" + id + " not found!");
-
-        return response.source();
-    }
-
-
-    public static String deleteMovieById(Long id) throws IOException {
-        DeleteRequest request = DeleteRequest.of(req->
-                req.index(index).id(String.valueOf(id)));
-        DeleteResponse response = elasticsearchClient.delete(request);
-        return response.result().toString();
-    }
-
-    public static String updateMovie(Movie movie) throws IOException {
-        UpdateRequest<Movie, Movie> updateRequest = UpdateRequest.of(req->
-                req.index(index)
-                        .id(String.valueOf(movie.getTconst()))
-                        .doc(movie));
-        UpdateResponse<Movie> response = elasticsearchClient.update(updateRequest, Movie.class);
-        return response.result().toString();
-    }
 
 
     public void createIndex() throws IOException {
@@ -96,22 +48,20 @@ public class SearchEngine {
         elasticsearchClient.indices().create(c -> c.index("imdb"));
     }
 
+    public void putSettings() throws IOException {
+        elasticsearchClient.indices().close(c -> c.index("imdb"));
 
+        InputStream analyzer = getClass().getClassLoader().getResourceAsStream("custom_analyzer.json");
+        elasticsearchClient.indices().putSettings(p -> p.index("imdb").withJson(analyzer));
 
-    public static void indexbulkMovies(List<Movie> movies) throws IOException, BulkIndexException {
-        BulkRequest.Builder request = new BulkRequest.Builder();
-
-        movies.forEach(movie -> request.operations(op -> op
-                .index(i -> i
-                        .index("imdb")
-                        .id(movie.getTconst())
-                        .document(movie))));
-
-        BulkResponse bulkResponse = elasticsearchClient.bulk(request.build());
-        if (bulkResponse.errors()) {
-            throw new BulkIndexException("Error indexing bulk");
-        }
+        elasticsearchClient.indices().open(o -> o.index("imdb"));
     }
+
+    public void putMapping() throws IOException {
+        InputStream mapping = getClass().getClassLoader().getResourceAsStream("mapping.json");
+        elasticsearchClient.indices().putMapping(p -> p.index("imdb").withJson(mapping));
+    }
+
 
 
     public void indexDocument(Movie movie) throws IOException {
@@ -120,4 +70,5 @@ public class SearchEngine {
                 .id(movie.getTconst())
                 .document(movie));
     }
+
 }
