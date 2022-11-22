@@ -1,74 +1,74 @@
 package co.empathy.academy.JavaClient.controlles;
 
 
-import co.empathy.academy.JavaClient.exception.BulkIndexException;
 import co.empathy.academy.JavaClient.exception.RecordNotFoundException;
 import co.empathy.academy.JavaClient.model.Movie;
 import co.empathy.academy.JavaClient.services.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
-
+@RequestMapping("/search")
 public class SearchController {
 
         @Autowired
         private SearchService searchService;
 
-        @GetMapping("/index/{id}")
-        public ResponseEntity<Movie> fetchMovieById(@PathVariable("id") String id) throws RecordNotFoundException, IOException {
-            Movie movie = searchService.fetchMovieById(id);
-            return ResponseEntity.ok(movie);
-        }
 
 
 
-        @PostMapping("/index")
-        public ResponseEntity<String> insertRecords(@RequestBody Movie movie) throws IOException {
-            String status = searchService.insertMovie(movie);
-            return ResponseEntity.ok(status);
-        }
+    /*
+    @GetMapping("/search")
+    public ResponseEntity<Response> getMovies(   @RequestParam(required = false) String [] genres,
+                                                 @RequestParam(required = false) Integer maxYear,
+                                                 @RequestParam(required = false) Integer minYear,
+                                                 @RequestParam(required = false) Integer maxMinutes,
+                                                 @RequestParam(required = false) Integer minMinutes,
+                                                 @RequestParam(required = false) Double maxScore,
+                                                 @RequestParam(required = false) Double minScore,
+                                                 @RequestParam(required = false) String[] type) throws IOException {
 
-        @PostMapping("/index/bulk")
-        public ResponseEntity<String> bulkInsertMovies(@RequestBody List<Movie> movies) throws IOException {
-                boolean isSuccess = searchService.bulkInsertMovies(movies);
-            if(isSuccess) {
-                return ResponseEntity.ok("Records successfully ingested!");
-            } else {
-                return ResponseEntity.internalServerError().body("Oops! unable to ingest data");
-            }
-        }
+        Filters filter=Filters.builder()
+                .type(type)
+                .maxMinutes(maxMinutes)
+                .minMinutes(minMinutes)
+                .maxYear(maxYear)
+                .minYear(minYear)
+                .genre(genres)
+                .minScore(minScore)
+                .maxScore(maxScore)
+                .build();
 
-        @DeleteMapping("/index/{id}")
-        public ResponseEntity<String> deleteMovies(@PathVariable("id") Long id) throws IOException {
-            String status = searchService.deleteMovieById(id);
-            return ResponseEntity.ok(status);
-        }
-
-        @PutMapping("/index")
-        public ResponseEntity<String> updateMovies(@RequestBody Movie movie) throws IOException {
-            String status = searchService.updateMovie(movie);
-            return ResponseEntity.ok(status);
-        }
-
-    public ResponseEntity indexImdbData(@RequestParam("basicsFile") MultipartFile basicsFile,
-                                        @RequestParam("ratingsFile") MultipartFile ratingsFile,
-                                        @RequestParam("akasFile") MultipartFile akasFile,
-                                        @RequestParam("crewFile") MultipartFile crewFile) {
-        try {
-            searchService.indexImdbData(basicsFile, ratingsFile, akasFile, crewFile);
-        } catch (BulkIndexException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.accepted().build();
+        return new ResponseEntity<>(searchService.getQuery(filter),HttpStatus.ACCEPTED);
     }
 
 
+
+    @GetMapping("/search/text")
+    public ResponseEntity<Response> getSearchMovies( @RequestParam(required = true) String searchText) throws IOException {
+        System.out.println(searchText);
+        return new ResponseEntity<>(searchService.getSearchQuery(searchText),HttpStatus.ACCEPTED);
     }
+
+     */
+
+
+
+
+
+}
+
+
+
+
