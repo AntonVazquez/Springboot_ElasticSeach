@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/index")
@@ -33,6 +34,8 @@ public class IndexController {
     }
 
 
+
+
     @PostMapping("/{indexName}")
     public ResponseEntity<Movie> indexDocument(@RequestBody Movie movie) {
         try {
@@ -43,7 +46,7 @@ public class IndexController {
         return ResponseEntity.created(null).body(movie);
     }
 
-
+    @PostMapping("/imdb")
     public ResponseEntity indexImdbData(@RequestParam("basicsFile") MultipartFile basicsFile,
                                         @RequestParam("ratingsFile") MultipartFile ratingsFile,
                                         @RequestParam("akasFile") MultipartFile akasFile,

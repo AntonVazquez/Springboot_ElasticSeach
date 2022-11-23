@@ -14,18 +14,6 @@ public interface SearchService {
 
 
 
-        Movie fetchMovieById(String id) throws RecordNotFoundException, IOException;
-
-
-        String insertMovie(Movie employee) throws IOException;
-
-        boolean bulkInsertMovies(List<Movie> movies) throws IOException;
-
-
-        public String deleteMovieById(Long id) throws IOException;
-
-        public String updateMovie(Movie movie) throws IOException;
-
 
        void createIndex() throws IOException;
 
@@ -33,4 +21,11 @@ public interface SearchService {
                            MultipartFile akasFile, MultipartFile crewFile) throws IOException, BulkIndexException;
 
         void indexDocument(Movie movie) throws IOException;
+
+/*
+    Object getQuery(Filters filter);
+
+    Object getSearchQuery(String searchText);
+
+ */
 }

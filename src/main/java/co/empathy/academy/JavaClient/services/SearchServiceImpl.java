@@ -19,57 +19,32 @@ public class SearchServiceImpl implements SearchService {
         this.searchEngine = searchEngine;
     }
 
-    @Override
-    public Movie fetchMovieById(String id) throws RecordNotFoundException, IOException {
-        return SearchEngine.fetchMovieById(id);
-    }
-
-    @Override
-    public String insertMovie(Movie employee) throws IOException {
-        return SearchEngine.insertMovie(employee);
-    }
-
-    @Override
-    public boolean bulkInsertMovies(List<Movie> movies) throws IOException {
-        return SearchEngine.bulkInsertMovies(movies);
-    }
-
-
-
-    @Override
-    public String deleteMovieById(Long id) throws IOException {
-        return SearchEngine.deleteMovieById(id);
-    }
-
-    @Override
-    public String updateMovie(Movie movie) throws IOException {
-        return SearchEngine.updateMovie(movie);
-    }
 
     @Override
     public void createIndex() throws IOException {
         searchEngine.createIndex();
-        /*
         searchEngine.putSettings();
         searchEngine.putMapping();
-        */
+
     }
 
     @Override
-    public void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile,
-                              MultipartFile akasFile, MultipartFile crewFile) throws IOException, BulkIndexException {
-        IMDbReader reader = new IMDbReader(basicsFile, ratingsFile, akasFile, crewFile);
+    public void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile, MultipartFile akasFile, MultipartFile crewFile) throws IOException, BulkIndexException {
 
-        while (reader.hasDocuments()) {
-            List<Movie> movies = reader.readDocuments();
-            SearchEngine.indexbulkMovies(movies);
-        }
     }
+
 
     @Override
     public void indexDocument(Movie movie) throws IOException {
         searchEngine.indexDocument(movie);
     }
+    /*
+    @Override
+    public Object filterQuery(String titleType, String type) {
+        return null;
+    }
+
+     */
 
 
 }
