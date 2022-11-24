@@ -50,9 +50,10 @@ public class IndexController {
     public ResponseEntity indexImdbData(@RequestParam("basicsFile") MultipartFile basicsFile,
                                         @RequestParam("ratingsFile") MultipartFile ratingsFile,
                                         @RequestParam("akasFile") MultipartFile akasFile,
-                                        @RequestParam("crewFile") MultipartFile crewFile) {
+                                        @RequestParam("crewFile") MultipartFile crewFile,
+                                        @RequestParam("principals") MultipartFile principalsFile) {
         try {
-            searchService.indexImdbData(basicsFile, ratingsFile, akasFile, crewFile);
+            searchService.indexImdbData(basicsFile, ratingsFile, akasFile, crewFile, principalsFile);
         } catch (BulkIndexException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (IOException e) {
