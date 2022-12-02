@@ -1,69 +1,52 @@
 package co.empathy.academy.JavaClient.controlles;
 
 
-import co.empathy.academy.JavaClient.exception.RecordNotFoundException;
 import co.empathy.academy.JavaClient.model.Movie;
-import co.empathy.academy.JavaClient.services.SearchService;
+import co.empathy.academy.JavaClient.services.SearchServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/")
 public class SearchController {
 
         @Autowired
-        private SearchService searchService;
+        private SearchServiceImpl searchService;
+
+    public SearchController(SearchServiceImpl searchService) {
+        this.searchService = searchService;
+    }
 
 
 
 
-    /*
+
+
+
     @GetMapping("/search")
-    public ResponseEntity<Response> getMovies(   @RequestParam(required = false) String [] genres,
-                                                 @RequestParam(required = false) Integer maxYear,
-                                                 @RequestParam(required = false) Integer minYear,
-                                                 @RequestParam(required = false) Integer maxMinutes,
-                                                 @RequestParam(required = false) Integer minMinutes,
-                                                 @RequestParam(required = false) Double maxScore,
-                                                 @RequestParam(required = false) Double minScore,
-                                                 @RequestParam(required = false) String[] type) throws IOException {
+    public ResponseEntity<List<Movie>> getMovies(@RequestParam(required = false) Optional<String> genres,
+                                                 @RequestParam(required = false) Optional<Integer> maxYear,
+                                                 @RequestParam(required = false) Optional<Integer> minYear,
+                                                 @RequestParam(required = false) Optional<Integer> maxMinutes,
+                                                 @RequestParam(required = false) Optional<Integer> minMinutes,
+                                                 @RequestParam(required = false) Optional<Double> maxScore,
+                                                 @RequestParam(required = false) Optional<Double> minScore,
+                                                 @RequestParam(required = false) Optional<Integer> maxNHits,
+                                                 @RequestParam(required = false) Optional<String> type) throws IOException {
 
-        Filters filter=Filters.builder()
-                .type(type)
-                .maxMinutes(maxMinutes)
-                .minMinutes(minMinutes)
-                .maxYear(maxYear)
-                .minYear(minYear)
-                .genre(genres)
-                .minScore(minScore)
-                .maxScore(maxScore)
-                .build();
+        List<Movie> sr = searchService.search(genres, maxYear, minYear, maxMinutes, minMinutes, maxScore, minScore,maxNHits, type);
+        return ResponseEntity.ok().body(sr);
 
-        return new ResponseEntity<>(searchService.getQuery(filter),HttpStatus.ACCEPTED);
+
     }
-
-
-
-    @GetMapping("/search/text")
-    public ResponseEntity<Response> getSearchMovies( @RequestParam(required = true) String searchText) throws IOException {
-        System.out.println(searchText);
-        return new ResponseEntity<>(searchService.getSearchQuery(searchText),HttpStatus.ACCEPTED);
-    }
-
-     */
-
-
 
 
 

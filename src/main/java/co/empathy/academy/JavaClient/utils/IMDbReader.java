@@ -18,17 +18,24 @@ public class IMDbReader {
     private final BufferedReader ratingsReader;
     private final BufferedReader akasReader;
     private final BufferedReader crewReader;
+
+    private final BufferedReader principalsReader;
+
+
     private final int documentsSize = 20000;
 
     private boolean hasDocuments = true;
 
 
-    public IMDbReader(MultipartFile basicsFile, MultipartFile ratingsFile, MultipartFile akasFile, MultipartFile crewFile) {
+    public IMDbReader(MultipartFile basicsFile, MultipartFile ratingsFile, MultipartFile akasFile, MultipartFile crewFile, MultipartFile principalsFile) {
         try {
             this.basicsReader = new BufferedReader(new InputStreamReader(basicsFile.getInputStream()));
             this.ratingsReader = new BufferedReader(new InputStreamReader(ratingsFile.getInputStream()));
             this.akasReader = new BufferedReader(new InputStreamReader(akasFile.getInputStream()));
             this.crewReader = new BufferedReader(new InputStreamReader(crewFile.getInputStream()));
+            this.principalsReader = new BufferedReader(new InputStreamReader(principalsFile.getInputStream()));
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -42,6 +49,7 @@ public class IMDbReader {
             ratingsReader.readLine();
             akasReader.readLine();
             crewReader.readLine();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
