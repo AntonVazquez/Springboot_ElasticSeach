@@ -21,7 +21,8 @@ public class ElasticSearchConfig {
     @Bean
     public ElasticsearchClient getElasticSearchClient() {
         // Create the low-level client
-        RestClient restClient = RestClient.builder(new HttpHost("localhost", 9200)).build();
+        RestClient restClient = RestClient.builder(new HttpHost("localhost", 9200),
+                new HttpHost("elasticsearch", 9200)).build();
         // Create the HLRC
         RestHighLevelClient hlrc = new RestHighLevelClientBuilder(restClient)
                 .setApiCompatibilityMode(true)

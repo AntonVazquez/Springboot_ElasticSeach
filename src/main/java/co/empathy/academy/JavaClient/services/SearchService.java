@@ -19,12 +19,16 @@ public interface SearchService {
 
        void createIndex() throws IOException;
 
-        void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile,
-                           MultipartFile akasFile, MultipartFile crewFile, MultipartFile principalsFile) throws IOException, BulkIndexException;
 
-        void indexDocument(Movie movie) throws IOException;
+
+    void indexImdbData(MultipartFile basicsFile, MultipartFile ratingsFile,
+                       MultipartFile akasFile, MultipartFile crewFile) throws IOException, BulkIndexException;
+
+    void indexDocument(Movie movie) throws IOException;
 
     Response searchQuery(String query) throws IOException;
+
+
 
     List<Movie> searchIndex(String indexName, String body) throws JSONException;
 
