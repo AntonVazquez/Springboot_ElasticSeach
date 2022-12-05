@@ -2,7 +2,10 @@ package co.empathy.academy.JavaClient.connector;
 
 
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.BulkRequest;
+import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.empathy.academy.JavaClient.configuration.ElasticSearchConfig;
+import co.empathy.academy.JavaClient.exception.BulkIndexException;
 import co.empathy.academy.JavaClient.model.Movie;
 import co.empathy.academy.JavaClient.services.QueryService;
 import org.json.JSONException;
@@ -58,6 +61,21 @@ public class SearchEngine {
                 .index("imdb")
                 .id(movie.getTconst())
                 .document(movie));
+    }
+
+    public void indexBulk(List<Movie> movies) throws IOException, BulkIndexException {
+        BulkRequest.Builder request = new BulkRequest.Builder();
+
+        movies.forEach(movie -> request.operations(op -> op
+                .index(i -> i
+                        .index("imdb")
+                        .id(movie.getTconst())
+                        .document(movie))));
+
+        BulkResponse bulkResponse = elasticSearchConfig.getElasticSearchClient().bulk(request.build());
+        if (bulkResponse.errors()) {
+            throw new BulkIndexException("Error indexing bulk");
+        }
     }
 
 
