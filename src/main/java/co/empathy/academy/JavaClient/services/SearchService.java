@@ -5,12 +5,13 @@ import co.empathy.academy.JavaClient.exception.BulkIndexException;
 import co.empathy.academy.JavaClient.model.Movie;
 import co.empathy.academy.JavaClient.model.Response;
 import org.json.JSONException;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public interface SearchService {
 
 
