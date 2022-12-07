@@ -4,9 +4,6 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
-import co.empathy.academy.JavaClient.connector.SearchEngine;
-import co.empathy.academy.JavaClient.services.SearchService;
-import co.empathy.academy.JavaClient.services.SearchServiceImpl;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -35,12 +32,9 @@ public class ElasticSearchConfig {
         // hlrc and esClient share the same httpClient
 
     }
-
-    @Bean
-    public SearchService getSearchService(SearchEngine searchEngine) {
-        return new SearchServiceImpl(searchEngine);}
-
 }
+
+
 
 
 
