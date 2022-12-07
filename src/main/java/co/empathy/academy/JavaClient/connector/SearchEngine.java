@@ -154,7 +154,7 @@ public class SearchEngine {
 
         // Must be a movie or Tv-Series. Default value = "movie"
         if(type.isPresent())
-            allQueries.add(queries.makeTermQueryMust("titleType", String.valueOf(type)));
+            allQueries.add(queries.makeTermQueryMust("titleType", String.valueOf(type.get())));
         else
             allQueries.add(queries.makeTermQueryMust("titleType", "movie"));
 
